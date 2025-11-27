@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Para ti</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            background-color: #000;
+            font-family: 'Times New Roman', serif;
+            color: white;
+            cursor: none;
+        }
+
+        #custom-cursor {
+            position: fixed;
+            top: 0;
+            left: 0;
+            font-size: 24px;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            text-shadow: 0 0 10px rgba(255, 255, 0, 0.8);
+            transition: transform 0.1s ease;
+        }
+
+        #canvas-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        #start-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: black;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            transition: opacity 1s ease;
+        }
+
+        #start-screen h1 {
+            font-size: 2rem;
+            letter-spacing: 3px;
+            font-weight: lighter;
+            animation: pulse 2s infinite;
+        }
+
+        #start-screen p {
+            font-size: 0.9rem;
+            opacity: 0.6;
+            margin-top: 10px;
+        }
+
+        .content-section {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 1s ease-out;
+            padding: 20px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .content-section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .content-section p {
+            font-size: 2.5rem;
+            max-width: 800px;
+            line-height: 1.6;
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.6);
+            margin-bottom: 50px;
+        }
+
+        #lyrics-overlay {
+            position: fixed;
+            bottom: 10%;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            pointer-events: none;
+            z-index: 20;
+        }
+
+        #current-lyric {
+            font-family: 'Courier New', monospace;
+            font-size: 1.2rem;
+            color: #ffff00;
+            text-shadow: 0 0 5px rgba(0, 0, 0, 0.8);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            background-color: rgba(0, 0, 0, 0.3);
+            padding: 5px 15px;
+            border-radius: 10px;
+            display: inline-block;
+        }
+
+        #current-lyric.show {
+            opacity: 1;
+        }
+
+        @keyframes pulse {
+            0% {
+                opacity: 0.5;
+            }
+
+            50% {
+                opacity: 1;
+            }
+
+            100% {
+                opacity: 0.5;
+            }
+        }
+
+        ::-webkit-scrollbar {
+            width: 0px;
+            background: transparent;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="custom-cursor">💛</div>
+
+    <div id="start-screen">
+        <h1>Haz clic para comenzar</h1>
+        <p>(Usa audífonos)</p>
+    </div>
+
+    <audio id="bg-music" loop>
+        <source src="song.mp3" type="audio/mpeg">
+        Tu navegador no soporta audio.
+    </audio>
+
+    <div id="canvas-container"></div>
+
+    <div id="lyrics-overlay">
+        <div id="current-lyric">...</div>
+    </div>
+
+    <main id="scroll-content">
+
+        <section class="content-section" style="height: 50vh;"></section>
+
+        <section class="content-section">
+            <p>A veces me detengo a pensar...</p>
+        </section>
+
+        <section class="content-section">
+            <p>En cómo ciertos momentos se quedan grabados en la memoria.</p>
+        </section>
+
+        <section class="content-section">
+            <p>Como si el tiempo se detuviera solo para nosotros.</p>
+        </section>
+
+        <section class="content-section">
+            <p>Hay canciones que suenan...</p>
+        </section>
+
+        <section class="content-section">
+            <p>Y automáticamente me recuerdan a tu sonrisa.</p>
+        </section>
+
+        <section class="content-section">
+            <p>Quería regalarte un pequeño pedazo del universo...</p>
+        </section>
+
+        <section class="content-section">
+            <p>Porque eso eres para mí.</p>
+        </section>
+
+        <section class="content-section">
+            <p>Y aunque todavía no le hayamos puesto un nombre a esto...</p>
+        </section>
+
+        <section class="content-section">
+            <p>Lo que siento es más real que cualquier etiqueta.</p>
+        </section>
+
+        <section class="content-section">
+            <p>A veces me pongo a repasar nuestra historia.</p>
+        </section>
+
+        <section class="content-section">
+            <p>Cómo empezamos con charlas casuales...</p>
+        </section>
+
+        <section class="content-section">
+            <p>Con risas que parecían simples.</p>
+        </section>
+
+        <section class="content-section">
+            <p>Sin saber que, poco a poco...</p>
+        </section>
+
+        <section class="content-section">
+            <p>Te irías volviendo mi rutina favorita.</p>
+        </section>
+
+        <section class="content-section">
+            <p>Me gusta lo que somos ahora.</p>
+        </section>
+
+        <section class="content-section">
+            <p>Esa complicidad de entendernos con una mirada.</p>
+        </section>
+
+        <section class="content-section">
+            <p>La confianza de contarnos todo (o casi todo).</p>
+        </section>
+
+        <section class="content-section">
+            <p>Pero te confieso algo...</p>
+        </section>
+
+        <section class="content-section">
+            <p>Cada día me cuesta más verte solo como una amiga.</p>
+        </section>
+
+        <section class="content-section">
+            <p>Porque un amigo no se queda pensando en tu sonrisa a las 3 AM.</p>
+        </section>
+
+        <section class="content-section">
+            <p>Ni busca cualquier excusa tonta solo para escribirte.</p>
+        </section>
+
+        <section class="content-section">
+            <p>Sé que hemos hablado de intentar algo...</p>
+        </section>
+
+        <section class="content-section">
+            <p>De ver hacia dónde nos lleva la corriente.</p>
+        </section>
+
+        <section class="content-section">
+            <p>Y quiero que sepas que no tengo prisa.</p>
+        </section>
+
+        <section class="content-section">
+            <p>Porque las mejores cosas se cocinan a fuego lento.</p>
+        </section>
+
+        <section class="content-section">
+            <p>Disfruto este proceso de conocerte.</p>
+        </section>
+
+        <section class="content-section">
+            <p>De descubrir tus manías, tus gustos, tus miedos.</p>
+        </section>
+
+        <section class="content-section">
+            <p>De ver cómo te brillan los ojos cuando hablas de lo que amas.</p>
+        </section>
+
+        <section class="content-section">
+            <p>Pero también me ilusiona...</p>
+        </section>
+
+        <section class="content-section">
+            <p>Me ilusiona mucho pensar en un "nosotros".</p>
+        </section>
+
+        <section class="content-section">
+            <p>No sé exactamente qué depare el futuro.</p>
+        </section>
+
+        <section class="content-section">
+            <p>Ni cuándo daremos el siguiente paso.</p>
+        </section>
+
+        <section class="content-section">
+            <p>Solo sé que, sea como sea...</p>
+        </section>
+
+        <section class="content-section">
+            <p>Quiero que sigas estando en mis días.</p>
+        </section>
+
+        <section class="content-section">
+            <p>Porque contigo todo parece más ligero.</p>
+        </section>
+
+        <section class="content-section">
+            <p>Has traído colores a mi vida que no sabía que existían.</p>
+        </section>
+
+        <section class="content-section">
+            <p>Y me has hecho sentir cosas que creí olvidadas.</p>
+        </section>
+
+        <section class="content-section">
+            <p>Gracias por la paciencia.</p>
+        </section>
+
+        <section class="content-section">
+            <p>Gracias por ser tú.</p>
+        </section>
+
+        <section class="content-section">
+            <p>Y gracias por permitirme estar cerca.</p>
+        </section>
+
+        <section class="content-section">
+            <p>Estoy disfrutando cada segundo de este viaje contigo.</p>
+        </section>
+
+        <section class="content-section">
+            <p>Sin presiones.</p>
+        </section>
+
+        <section class="content-section">
+            <p>Solo dejándonos ser.</p>
+        </section>
+
+        <section class="content-section">
+            <p>Porque al final del día...</p>
+        </section>
+
+        <section class="content-section">
+            <p>Eres mi casualidad más bonita.</p>
+        </section>
+
+        <section class="content-section">
+            <p>Y pase lo que pase...</p>
+        </section>
+
+        <section class="content-section">
+            <p>Ya eres especial para mí.</p>
+        </section>
+
+        <section class="content-section" style="height: 50vh;"></section>
+
+    </main>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+    <script>
+        const lrcString = `
+[00:15.57]Cada vez que respires
+[00:19.37]Y cada movimiento que hagas
+...
+`;
+
+        function parseLRC(lrc) {
+            const regex = /\[(\d{2}):(\d{2})\.(\d{2})\](.*)/;
+            const lines = lrc.split('\n');
+            const output = [];
+            lines.forEach(line => {
+                const match = line.match(regex);
+                if (match) {
+                    const time = parseInt(match[1]) * 60 + parseInt(match[2]) + (parseInt(match[3]) / 100);
+                    output.push({ time, text: match[4].trim() });
+                }
+            });
+            return output;
+        }
+        const lyricsData = parseLRC(lrcString);
+
+        const cursor = document.getElementById('custom-cursor');
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+        });
+        document.addEventListener('mousedown', () => cursor.style.transform = "translate(-50%, -50%) scale(0.8)");
+        document.addEventListener('mouseup', () => cursor.style.transform = "translate(-50%, -50%) scale(1)");
+
+        const startScreen = document.getElementById('start-screen');
+        const audio = document.getElementById('bg-music');
+        const lyricElement = document.getElementById('current-lyric');
+        let started = false;
+
+        startScreen.addEventListener('click', () => {
+            if (!started) {
+                startScreen.style.opacity = '0';
+                setTimeout(() => startScreen.style.display = 'none', 1000);
+                audio.volume = 0.5;
+                audio.play().catch(e => console.log("Error audio:", e));
+                started = true;
+            }
+        });
+
+        audio.addEventListener('timeupdate', () => {
+            const currentTime = audio.currentTime;
+            let currentLine = null;
+
+            for (let i = 0; i < lyricsData.length; i++) {
+                if (currentTime >= lyricsData[i].time) {
+                    currentLine = lyricsData[i];
+                } else break;
+            }
+
+            if (currentLine) {
+                if (lyricElement.innerText !== currentLine.text) {
+                    if (currentLine.text === "") {
+                        lyricElement.classList.remove('show');
+                    } else {
+                        lyricElement.classList.remove('show');
+                        setTimeout(() => {
+                            lyricElement.innerText = currentLine.text;
+                            lyricElement.classList.add('show');
+                        }, 200);
+                    }
+                }
+            }
+        });
+
+        const sections = document.querySelectorAll('.content-section');
+        function checkScroll() {
+            const triggerBottom = window.innerHeight * 0.8;
+            sections.forEach(section => {
+                const sectionTop = section.getBoundingClientRect().top;
+                if (sectionTop < triggerBottom) section.classList.add('visible');
+                else section.classList.remove('visible');
+            });
+        }
+        window.addEventListener('scroll', checkScroll);
+        checkScroll();
+
+        const scene = new THREE.Scene();
+        scene.fog = new THREE.FogExp2(0x000000, 0.002);
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.getElementById('canvas-container').appendChild(renderer.domElement);
+
+        const particlesGeometry = new THREE.BufferGeometry();
+        const particlesCount = 3000;
+        const posArray = new Float32Array(particlesCount * 3);
+        for (let i = 0; i < particlesCount * 3; i++) {
+            posArray[i] = (Math.random() - 0.5) * 2000;
+        }
+        particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+        const particlesMaterial = new THREE.PointsMaterial({ size: 2, color: 0xffffff, transparent: true, opacity: 0.8 });
+        const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
+        scene.add(particlesMesh);
+
+        camera.position.z = 100;
+
+        let mouseX = 0;
+        let mouseY = 0;
+        document.addEventListener('mousemove', (event) => {
+            mouseX = event.clientX - window.innerWidth / 2;
+            mouseY = event.clientY - window.innerHeight / 2;
+        });
+
+        const clock = new THREE.Clock();
+        function animate() {
+            const elapsedTime = clock.getElapsedTime();
+            particlesMesh.rotation.y = elapsedTime * 0.02;
+
+            particlesMesh.position.x += mouseX * 0.0005;
+            particlesMesh.position.y -= mouseY * 0.0005;
+
+            renderer.render(scene, camera);
+            requestAnimationFrame(animate);
+        }
+        animate();
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+    </script>
+</body>
+
+</html>
